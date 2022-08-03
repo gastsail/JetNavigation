@@ -6,7 +6,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jetnavigation.data.findFruit
 import com.example.jetnavigation.data.fruitList
 import com.example.jetnavigation.ui.screens.FruitDetailScreen
 import com.example.jetnavigation.ui.screens.FruitScreen
