@@ -9,6 +9,5 @@ val fruitList = listOf(
     Fruit(3, "Grape")
 )
 
-fun findFruit(id: Int): Fruit? {
-    return fruitList.find { it.id == id }
-}
+fun findFruit(id: Int) = fruitList.find { it.id == id }
+
