@@ -29,6 +29,7 @@ fun MasterScreen(navController: NavController) {
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 private fun MasterPreview() {
