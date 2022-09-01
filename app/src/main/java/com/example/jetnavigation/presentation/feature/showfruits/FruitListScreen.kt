@@ -1,56 +1,56 @@
-package com.example.jetnavigation.ui.screens
+package com.example.jetnavigation.presentation.feature.showfruits
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.jetnavigation.data.Fruit
-import com.example.jetnavigation.data.fruitList
-import com.example.jetnavigation.ui.Screen
-import com.example.jetnavigation.ui.theme.GreenBackground
-import com.example.jetnavigation.ui.theme.GreenText
+import com.example.jetnavigation.data.LocalFruitRepository.Companion.fruitList
+import com.example.jetnavigation.presentation.theme.GreenText
 
 @Composable
-fun FruitScreen(navController: NavController, fruitList: List<Fruit>) {
-    LazyColumn {
+fun FruitListScreen(
+    fruitViewModel: FruitViewModel,
+    onFruitClick: (Fruit) -> Unit,
+) {
+    val fruits = fruitViewModel.fruitUiState.observeAsState()
 
+    fruits.value?.let {
+        FruitList(fruits = it.fruits, onFruitClick)
+    }
+}
+
+@Composable
+fun FruitList(fruits: List<Fruit>, onFruitClick: (Fruit) -> Unit) {
+    LazyColumn {
         item {
-            FruitsSectionListHeader()
+            Header()
         }
 
-        items(fruitList) {
-            FruitItem(fruit = it, onFruitClick = { fruit ->
-                navController.navigate(Screen.FruitDetailScreen.route + "/${fruit.id}")
-            })
+        items(fruits) { fruit ->
+            FruitItem(fruit = fruit, onFruitClick = { onFruitClick(fruit) })
         }
     }
 }
 
 @Composable
-fun FruitsSectionListHeader() {
+fun Header() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,24 +66,9 @@ fun FruitsSectionListHeader() {
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold
         )
-        Spacer(
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .background(Color.Transparent)
-        )
-        Card(shape = RoundedCornerShape(35), modifier = Modifier.width(40.dp).height(40.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.ArrowForward,
-                contentDescription = "arrow",
-                modifier = Modifier.background(GreenBackground),
-                tint = Color.White
-            )
-        }
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
     Row(
@@ -138,11 +123,11 @@ private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun FruitItemPreview() {
-    FruitItem(fruitList[1], {})
+    FruitItem(fruitList[0]) {}
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun FruitScreenPreview() {
-    FruitScreen(navController = rememberNavController(), fruitList)
+private fun FruitListPreview() {
+    FruitList(fruitList) {}
 }

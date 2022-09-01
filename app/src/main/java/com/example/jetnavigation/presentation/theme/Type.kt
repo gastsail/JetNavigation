@@ -1,4 +1,4 @@
-package com.example.jetnavigation.ui.theme
+package com.example.jetnavigation.presentation.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
