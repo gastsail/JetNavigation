@@ -41,7 +41,7 @@ class FruitViewModel @Inject constructor(private val fruitRepository: LocalFruit
                 fruitRepository.getFruitById(id)
             }.onSuccess { fruit ->
                 fruit?.let {
-                    updateFruitUiState(isLoading = false, fruits = listOf(it))
+                    updateFruitUiState(isLoading = false, selectedFruit = it)
                 } ?: run {
                     updateFruitUiState(isLoading = false, error = "Fruit with id: $id not found")
                 }
@@ -54,16 +54,27 @@ class FruitViewModel @Inject constructor(private val fruitRepository: LocalFruit
 
     private fun updateFruitUiState(
         isLoading: Boolean = false,
-        fruits: List<Fruit> = listOf(),
+        fruits: List<Fruit> = emptyList(),
+        selectedFruit: Fruit? = null,
         error: String? = null,
     ) {
         _fruitUiState.value =
-            fruitUiState.value?.copy(isLoading = isLoading, fruits = fruits, error = error)
+            fruitUiState.value?.copy(isLoading = isLoading,
+                fruits = fruits,
+                selectedFruit = selectedFruit,
+                error = error)
     }
 }
 
 data class FruitUiState(
     val isLoading: Boolean = false,
     val fruits: List<Fruit> = emptyList(),
+    val selectedFruit: Fruit? = null,
     val error: String? = null,
-)
+) {
+    fun hasFruits() = !isLoading && fruits.isNotEmpty()
+
+    fun hasSelectedFruit() = !isLoading && selectedFruit != null
+
+    fun hasError() = !isLoading && error != null
+}

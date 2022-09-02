@@ -19,7 +19,7 @@ class LocalFruitRepository @Inject constructor() {
     }
 
     companion object {
-        private const val MAX_DELAY = 500L
+        private const val MAX_DELAY = 1000L
 
         val fruitList = listOf(
             Fruit(

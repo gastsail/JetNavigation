@@ -1,5 +1,6 @@
 package com.example.jetnavigation.presentation.feature.showfruits
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -29,10 +31,28 @@ fun FruitListScreen(
     fruitViewModel: FruitViewModel,
     onFruitClick: (Fruit) -> Unit,
 ) {
-    val fruits = fruitViewModel.fruitUiState.observeAsState()
+    val fruitUiState = fruitViewModel.fruitUiState.observeAsState()
 
-    fruits.value?.let {
-        FruitList(fruits = it.fruits, onFruitClick)
+    when {
+        fruitUiState.value?.isLoading == true -> {
+            Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
+        }
+        fruitUiState.value?.hasFruits() == true -> {
+            fruitUiState.value?.fruits?.let {
+                FruitList(fruits = it,
+                    onFruitClick = onFruitClick
+                )
+            }
+        }
+        fruitUiState.value?.hasSelectedFruit() == true -> {
+            // No-op
+        }
+        fruitUiState.value?.hasError() == true -> {
+            Toast.makeText(LocalContext.current,
+                "Error ${fruitUiState.value?.error}",
+                Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 }
 

@@ -7,15 +7,16 @@ import com.example.jetnavigation.data.Fruit
 
 @Composable
 fun FruitDetailScreen(fruitViewModel: FruitViewModel) {
-    val fruits = fruitViewModel.fruitUiState.observeAsState()
+    val fruitUiState = fruitViewModel.fruitUiState.observeAsState()
 
-    fruits.value?.let {
-        FruitDetail(fruit = it.fruits.firstOrNull())
+    if(fruitUiState.value?.hasSelectedFruit() == true){
+        FruitDetail(fruit = fruitUiState.value?.selectedFruit)
     }
 }
 
 @Composable
 fun FruitDetail(fruit: Fruit?) {
+    // TODO Add description text
     fruit?.let {
         Text(text = it.name)
     }
