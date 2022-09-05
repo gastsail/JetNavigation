@@ -10,6 +10,6 @@ data class Fruit(
     val name: String,
     val subtitle: String,
     val description: String,
-    val price: Int,
+    val price: Float,
     @DrawableRes val image: Int,
 ) : Parcelable

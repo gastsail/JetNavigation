@@ -25,82 +25,66 @@ class LocalFruitRepository @Inject constructor() {
             Fruit(
                 id = 0,
                 name = "Avocado",
-                subtitle = "Super Tasty",
-                description = "The avocado is a rather unique fruit. \n While most fruit consists primarily of carbohydrate, avocado is high in healthy fats.",
-                price = 1,
+                subtitle = "Super tasty",
+                description = "Avocado description",
+                price = 0.99f,
                 image = R.drawable.avocado
             ),
             Fruit(
                 id = 1,
                 name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
+                subtitle = "Super tasty",
+                description = "Banana description",
+                price = 0.99f,
                 image = R.drawable.banana
             ),
             Fruit(
                 id = 2,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Dragonfruit",
+                subtitle = "Super tasty",
+                description = "Dragonfruit description",
+                price = 0.99f,
+                image = R.drawable.dragonfruit
             ),
             Fruit(
                 id = 3,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Grapefruit",
+                subtitle = "Super tasty",
+                description = "Grapefruit description",
+                price = 0.99f,
+                image = R.drawable.grapefruit
             ),
             Fruit(
                 id = 4,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Lemon",
+                subtitle = "Super tasty",
+                description = "Lemon description",
+                price = 0.99f,
+                image = R.drawable.lemon
             ),
             Fruit(
                 id = 5,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Pomegranade",
+                subtitle = "Super tasty",
+                description = "Pomegranade description",
+                price = 0.99f,
+                image = R.drawable.pomegranate
             ),
             Fruit(
                 id = 6,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Strawberry",
+                subtitle = "Super tasty",
+                description = "Strawberry description",
+                price = 0.99f,
+                image = R.drawable.strawberry
             ),
             Fruit(
                 id = 7,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
-            ),
-            Fruit(
-                id = 8,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
-            ),
-            Fruit(
-                id = 9,
-                name = "Banana",
-                subtitle = "Ripe and Tasty",
-                description = "Rich in potassium and vitamins B6 and C, bananas also contain essential amino acids, high amounts of carbohydrate and fiber, but low amounts of protein and fat.",
-                price = 2,
-                image = R.drawable.banana
+                name = "Watermelon",
+                subtitle = "Super tasty",
+                description = "Watermelon description",
+                price = 0.99f,
+                image = R.drawable.watermelon
             )
         )
     }
