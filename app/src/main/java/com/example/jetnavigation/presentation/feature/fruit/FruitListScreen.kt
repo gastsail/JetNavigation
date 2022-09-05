@@ -1,4 +1,4 @@
-package com.example.jetnavigation.presentation.feature.showfruits
+package com.example.jetnavigation.presentation.feature.fruit
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -22,49 +22,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetnavigation.data.Fruit
 import com.example.jetnavigation.data.LocalFruitRepository.Companion.fruitList
 import com.example.jetnavigation.presentation.theme.GreenText
 
 @Composable
 fun FruitListScreen(
-    fruitViewModel: FruitViewModel,
-    onFruitClick: (Fruit) -> Unit,
+    viewModel: FruitViewModel = hiltViewModel(),
+    onNavigateToFruitDetail: (Fruit) -> Unit,
 ) {
-    val fruitUiState = fruitViewModel.fruitUiState.observeAsState()
+    val fruitUiState = viewModel.fruitUiState.observeAsState()
 
-    when {
-        fruitUiState.value?.isLoading == true -> {
-            Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
-        }
-        fruitUiState.value?.hasFruits() == true -> {
-            fruitUiState.value?.fruits?.let {
-                FruitList(fruits = it,
-                    onFruitClick = onFruitClick
+    fruitUiState.value?.let { state ->
+        when (state) {
+            FruitUiState.Loading -> {
+                Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
+            }
+            is FruitUiState.FruitUiListSuccess -> {
+                FruitList(
+                    fruits = state.fruitList,
+                    onFruitClicked = onNavigateToFruitDetail
                 )
             }
-        }
-        fruitUiState.value?.hasSelectedFruit() == true -> {
-            // No-op
-        }
-        fruitUiState.value?.hasError() == true -> {
-            Toast.makeText(LocalContext.current,
-                "Error ${fruitUiState.value?.error}",
-                Toast.LENGTH_SHORT)
-                .show()
+            is FruitUiState.Error -> {
+                Toast.makeText(LocalContext.current,
+                    "Error ${state.error}",
+                    Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 }
 
 @Composable
-fun FruitList(fruits: List<Fruit>, onFruitClick: (Fruit) -> Unit) {
+fun FruitList(fruits: List<Fruit>, onFruitClicked: (Fruit) -> Unit) {
     LazyColumn {
         item {
             Header()
         }
 
         items(fruits) { fruit ->
-            FruitItem(fruit = fruit, onFruitClick = { onFruitClick(fruit) })
+            FruitItem(
+                fruit = fruit,
+                onFruitClicked = { onFruitClicked(fruit) }
+            )
         }
     }
 }
@@ -90,12 +92,12 @@ fun Header() {
 }
 
 @Composable
-private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
+private fun FruitItem(fruit: Fruit, onFruitClicked: (fruit: Fruit) -> Unit) {
     Row(
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp, top = 8.dp, bottom = 8.dp)
             .clickable {
-                onFruitClick(fruit)
+                onFruitClicked(fruit)
             }) {
         Card(
             shape = RoundedCornerShape(8.dp),
@@ -104,8 +106,10 @@ private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
                 .height(80.dp)
         ) {
             Image(
-                painter = painterResource(id = fruit.image), contentDescription = "Fruit image",
-                contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
+                painter = painterResource(id = fruit.image),
+                contentDescription = "Fruit image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
         Column(
@@ -146,7 +150,11 @@ private fun FruitItemPreview() {
     FruitItem(fruitList[0]) {}
 }
 
-@Preview(showBackground = true)
+@Preview(name = "background", showBackground = true)
+@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
+@Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
+@Preview(name = "foldable", device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480")
+@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
 @Composable
 private fun FruitListPreview() {
     FruitList(fruitList) {}

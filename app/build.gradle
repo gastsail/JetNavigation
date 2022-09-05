@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'dagger.hilt.android.plugin'
 }
 
@@ -67,8 +68,12 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.navigation:navigation-compose:$navigation_compose_version"
 
+    // GSON
+    implementation "com.google.code.gson:gson:$gson_version"
+
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation_compose_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Testing
