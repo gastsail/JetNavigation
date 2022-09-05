@@ -1,56 +1,78 @@
-package com.example.jetnavigation.ui.screens
+package com.example.jetnavigation.presentation.feature.fruit
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetnavigation.data.Fruit
-import com.example.jetnavigation.data.fruitList
-import com.example.jetnavigation.ui.Screen
-import com.example.jetnavigation.ui.theme.GreenBackground
-import com.example.jetnavigation.ui.theme.GreenText
+import com.example.jetnavigation.data.LocalFruitRepository.Companion.fruitList
+import com.example.jetnavigation.presentation.theme.GreenText
 
 @Composable
-fun FruitScreen(navController: NavController, fruitList: List<Fruit>) {
-    LazyColumn {
+fun FruitListScreen(
+    viewModel: FruitViewModel = hiltViewModel(),
+    onNavigateToFruitDetail: (Fruit) -> Unit,
+) {
+    val fruitUiState = viewModel.fruitUiState.observeAsState()
 
-        item {
-            FruitsSectionListHeader()
-        }
-
-        items(fruitList) {
-            FruitItem(fruit = it, onFruitClick = { fruit ->
-                navController.navigate(Screen.FruitDetailScreen.route + "/${fruit.id}")
-            })
+    fruitUiState.value?.let { state ->
+        when (state) {
+            FruitUiState.Loading -> {
+                Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
+            }
+            is FruitUiState.FruitUiListSuccess -> {
+                FruitList(
+                    fruits = state.fruitList,
+                    onFruitClicked = onNavigateToFruitDetail
+                )
+            }
+            is FruitUiState.Error -> {
+                Toast.makeText(LocalContext.current,
+                    "Error ${state.error}",
+                    Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 }
 
 @Composable
-fun FruitsSectionListHeader() {
+fun FruitList(fruits: List<Fruit>, onFruitClicked: (Fruit) -> Unit) {
+    LazyColumn {
+        item {
+            Header()
+        }
+
+        items(fruits) { fruit ->
+            FruitItem(
+                fruit = fruit,
+                onFruitClicked = { onFruitClicked(fruit) }
+            )
+        }
+    }
+}
+
+@Composable
+fun Header() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,31 +88,16 @@ fun FruitsSectionListHeader() {
             fontSize = 20.sp,
             fontWeight = FontWeight.SemiBold
         )
-        Spacer(
-            Modifier
-                .weight(1f)
-                .fillMaxHeight()
-                .background(Color.Transparent)
-        )
-        Card(shape = RoundedCornerShape(35), modifier = Modifier.width(40.dp).height(40.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.ArrowForward,
-                contentDescription = "arrow",
-                modifier = Modifier.background(GreenBackground),
-                tint = Color.White
-            )
-        }
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
-private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
+private fun FruitItem(fruit: Fruit, onFruitClicked: (fruit: Fruit) -> Unit) {
     Row(
         modifier = Modifier
             .padding(start = 32.dp, end = 32.dp, top = 8.dp, bottom = 8.dp)
             .clickable {
-                onFruitClick(fruit)
+                onFruitClicked(fruit)
             }) {
         Card(
             shape = RoundedCornerShape(8.dp),
@@ -99,8 +106,10 @@ private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
                 .height(80.dp)
         ) {
             Image(
-                painter = painterResource(id = fruit.image), contentDescription = "Fruit image",
-                contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize()
+                painter = painterResource(id = fruit.image),
+                contentDescription = "Fruit image",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
             )
         }
         Column(
@@ -138,11 +147,15 @@ private fun FruitItem(fruit: Fruit, onFruitClick: (fruit: Fruit) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun FruitItemPreview() {
-    FruitItem(fruitList[1], {})
+    FruitItem(fruitList[0]) {}
 }
 
-@Preview(showBackground = true)
+@Preview(name = "background", showBackground = true)
+@Preview(name = "phone", device = "spec:shape=Normal,width=360,height=640,unit=dp,dpi=480")
+@Preview(name = "landscape", device = "spec:shape=Normal,width=640,height=360,unit=dp,dpi=480")
+@Preview(name = "foldable", device = "spec:shape=Normal,width=673,height=841,unit=dp,dpi=480")
+@Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
 @Composable
-private fun FruitScreenPreview() {
-    FruitScreen(navController = rememberNavController(), fruitList)
+private fun FruitListPreview() {
+    FruitList(fruitList) {}
 }
