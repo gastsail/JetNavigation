@@ -26,7 +26,7 @@ class LocalFruitRepository @Inject constructor() {
                 id = 0,
                 name = "Avocado",
                 subtitle = "Super tasty",
-                description = "Avocado description",
+                description = "The avocado is a rather unique fruit. /n While most fruit consists primarily of carbohydrate, avocado is high in healthy fats.",
                 price = 0.99f,
                 image = R.drawable.avocado
             ),

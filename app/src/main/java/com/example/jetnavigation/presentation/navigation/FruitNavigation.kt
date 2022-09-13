@@ -26,6 +26,7 @@ sealed class FruitNavigation(val route: String) {
 
 fun NavGraphBuilder.fruitGraph(
     onNavigateToFruitDetail: (Fruit) -> Unit,
+    onNavigateBack: () -> Unit
 ) {
     composable(route = FruitListNavigation.route) {
         FruitListScreen(
@@ -38,7 +39,7 @@ fun NavGraphBuilder.fruitGraph(
         })
     ) { navBackStackEntry ->
         navBackStackEntry.arguments?.getParcelable<Fruit>(FRUIT_NAV_ARG)?.let { fruit ->
-            FruitDetailScreen(fruit = fruit)
+            FruitDetailScreen(fruit = fruit, onNavigateBack = onNavigateBack)
         }
     }
 }

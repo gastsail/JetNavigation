@@ -15,6 +15,9 @@ fun AppNavHost(
         fruitGraph(
             onNavigateToFruitDetail = { fruit ->
                 navController.navigate(FruitDetailNavigation.getDestination(fruit))
+            },
+            onNavigateBack = {
+                navController.popBackStack()
             }
         )
     }
