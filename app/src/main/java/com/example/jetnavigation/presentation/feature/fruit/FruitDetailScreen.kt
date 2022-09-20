@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,8 +26,13 @@ import java.text.DecimalFormat
 @Composable
 fun FruitDetailScreen(fruit: Fruit?, onNavigateBack: () -> Unit) {
     val safeFruitImage = fruit?.image ?: R.drawable.avocado
-    Column {
-        HeaderSection(fruitImage = safeFruitImage, onNavigateBack)
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy((-25).dp)) {
+        HeaderSection(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            fruitImage = safeFruitImage, onNavigateBack
+        )
         FooterSection(fruit)
     }
 }
@@ -79,15 +82,16 @@ contentDescription = "bestsellers"
  */
 
 @Composable
-fun HeaderSection(fruitImage: Int, onNavigateBack: () -> Unit) {
-    Box(Modifier.offset(y = 15.dp)) {
+fun HeaderSection(modifier: Modifier, fruitImage: Int, onNavigateBack: () -> Unit) {
+    Box(
+        modifier = modifier
+    ) {
         Image(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(400.dp),
+                .fillMaxSize(),
             painter = painterResource(id = fruitImage),
             contentDescription = "fruit image",
-            contentScale = ContentScale.FillBounds
+            contentScale = ContentScale.Crop
         )
     }
 }
@@ -95,8 +99,12 @@ fun HeaderSection(fruitImage: Int, onNavigateBack: () -> Unit) {
 @Composable
 fun FooterSection(fruit: Fruit?) {
     if (fruit != null) {
-        Card(shape = RoundedCornerShape(20.dp)) {
-            Column(modifier = Modifier.padding(32.dp), horizontalAlignment = Alignment.Start) {
+        Card(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) {
+            Column(
+                modifier = Modifier.padding(32.dp),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Bottom
+            ) {
                 Row {
                     Column {
                         Text(
