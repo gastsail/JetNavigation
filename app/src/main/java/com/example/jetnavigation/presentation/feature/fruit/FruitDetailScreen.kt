@@ -1,16 +1,26 @@
 package com.example.jetnavigation.presentation.feature.fruit
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,63 +36,68 @@ import java.text.DecimalFormat
 @Composable
 fun FruitDetailScreen(fruit: Fruit?, onNavigateBack: () -> Unit) {
     val safeFruitImage = fruit?.image ?: R.drawable.avocado
-    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy((-25).dp)) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy((-25).dp)
+    ) {
         HeaderSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
-            fruitImage = safeFruitImage, onNavigateBack
+            fruitImage = safeFruitImage
         )
         FooterSection(fruit)
     }
+
+    Box(modifier = Modifier.fillMaxHeight().padding(32.dp)) {
+        TopBarNavigationSection(onNavigateBack)
+    }
 }
 
-/**
- * This is the code for the top bar, we need to overlap it with the image inside the header section
- *
- * Row {
-Button(
-modifier = Modifier
-.width(35.dp)
-.height(35.dp),
-onClick = { onNavigateBack.invoke() },
-shape = RoundedCornerShape(8.dp),
-colors = ButtonDefaults.buttonColors(
-backgroundColor = Color.White.copy(alpha = .8f),
-contentColor = Color.White
-),
-contentPadding = PaddingValues(0.dp)
-) {
-Icon(
-imageVector = Icons.Outlined.ArrowBack,
-contentDescription = "bestsellers"
-)
-}
-
-Spacer(modifier = Modifier.weight(1f))
-
-Button(
-modifier = Modifier
-.width(35.dp)
-.height(35.dp),
-onClick = { /*TODO*/ },
-shape = RoundedCornerShape(8.dp),
-colors = ButtonDefaults.buttonColors(
-backgroundColor = Color.White.copy(alpha = .8f),
-contentColor = Color.White
-),
-contentPadding = PaddingValues(0.dp)
-) {
-Icon(
-imageVector = Icons.Outlined.ShoppingCart,
-contentDescription = "bestsellers"
-)
-}
-}
- */
 
 @Composable
-fun HeaderSection(modifier: Modifier, fruitImage: Int, onNavigateBack: () -> Unit) {
+private fun TopBarNavigationSection(onNavigateBack: () -> Unit) {
+    Row(verticalAlignment = Alignment.Top) {
+        Button(
+            modifier = Modifier
+                .size(35.dp),
+            onClick = { onNavigateBack.invoke() },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.White.copy(alpha = .3f),
+                contentColor = Color.White
+            ),
+            contentPadding = PaddingValues(0.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.ArrowBack,
+                contentDescription = "bestsellers"
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        Button(
+            modifier = Modifier
+                .size(35.dp),
+            onClick = { /*TODO*/ },
+            shape = RoundedCornerShape(8.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.White.copy(alpha = .3f),
+                contentColor = Color.White
+            ),
+            contentPadding = PaddingValues(8.dp)
+        ) {
+            Icon(modifier = Modifier.shadow(elevation = 0.dp),
+                imageVector = Icons.Outlined.ShoppingCart,
+                contentDescription = "bestsellers"
+            )
+        }
+    }
+}
+
+@Composable
+private fun HeaderSection(modifier: Modifier, fruitImage: Int) {
     Box(
         modifier = modifier
     ) {
@@ -97,7 +112,8 @@ fun HeaderSection(modifier: Modifier, fruitImage: Int, onNavigateBack: () -> Uni
 }
 
 @Composable
-fun FooterSection(fruit: Fruit?) {
+private fun FooterSection(fruit: Fruit?) {
+    var isFavorite by remember { mutableStateOf(false) }
     if (fruit != null) {
         Card(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) {
             Column(
@@ -123,7 +139,7 @@ fun FooterSection(fruit: Fruit?) {
                         modifier = Modifier
                             .width(35.dp)
                             .height(35.dp),
-                        onClick = { /*TODO*/ },
+                        onClick = { isFavorite = !isFavorite },
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = GreenBackground,
@@ -132,7 +148,10 @@ fun FooterSection(fruit: Fruit?) {
                         contentPadding = PaddingValues(0.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.Favorite,
+                            imageVector = when (isFavorite) {
+                                true -> Icons.Filled.Favorite
+                                false -> Icons.Outlined.FavoriteBorder
+                            },
                             contentDescription = "bestsellers"
                         )
                     }
@@ -163,11 +182,11 @@ fun FooterSection(fruit: Fruit?) {
 
 //TODO THE STATE OF THE INCREMENT DECREMENT SHOULD BE PROPAGATED TO THE TOP WITH LAMBDAS
 @Composable
-fun IncrementDecrementSection(
+private fun IncrementDecrementSection(
     fruit: Fruit?
 ) {
     if (fruit != null) {
-        var qty by remember { mutableStateOf(0) }
+        var qty by remember { mutableStateOf(1) }
         val totalPrice by remember { mutableStateOf(fruit.price) }
         Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedButton(
@@ -182,11 +201,15 @@ fun IncrementDecrementSection(
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Text(
-                    text = "-", color = GreenText,
-                    style = MaterialTheme.typography.body1,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
+                Icon(
+                    imageVector = when (qty) {
+                        1 -> Icons.Default.Delete
+                        else -> Icons.Default.Remove
+                    }, contentDescription = "add",
+                    tint = when (qty) {
+                        0 -> Color.Gray
+                        else -> GreenText
+                    }
                 )
             }
 
@@ -210,24 +233,22 @@ fun IncrementDecrementSection(
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Text(
-                    text = "+",
-                    color = GreenText,
-                    style = MaterialTheme.typography.body1,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center
-                )
+                Icon(imageVector = Icons.Default.Add, contentDescription = "add", tint = GreenText)
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Column {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
                     text = "$${DecimalFormat("0.00").format(totalPrice * qty)} ", color = GreenText,
                     style = MaterialTheme.typography.h6,
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "total price", color = GreenText.copy(alpha = .8f))
+                Text(
+                    text = "total price",
+                    color = GreenText.copy(alpha = .8f),
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
@@ -241,7 +262,7 @@ fun PreviewFruitDetailScreen() {
             id = 0,
             name = "Avocado",
             subtitle = "Super tasty",
-            description = "The avocado is a rather unique fruit. /n While most fruit consists primarily of carbohydrate, avocado is high in healthy fats.",
+            description = "The avocado is a rather unique fruit. While most fruit consists primarily of carbohydrate, avocado is high in healthy fats.",
             price = 0.99f,
             image = R.drawable.avocado
         )
