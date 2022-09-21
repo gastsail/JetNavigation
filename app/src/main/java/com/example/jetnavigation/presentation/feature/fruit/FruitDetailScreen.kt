@@ -1,8 +1,9 @@
 package com.example.jetnavigation.presentation.feature.fruit
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,7 +50,11 @@ fun FruitDetailScreen(fruit: Fruit?, onNavigateBack: () -> Unit) {
         FooterSection(fruit)
     }
 
-    Box(modifier = Modifier.fillMaxHeight().padding(32.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxHeight()
+            .padding(32.dp)
+    ) {
         TopBarNavigationSection(onNavigateBack)
     }
 }
@@ -88,7 +93,8 @@ private fun TopBarNavigationSection(onNavigateBack: () -> Unit) {
             ),
             contentPadding = PaddingValues(8.dp)
         ) {
-            Icon(modifier = Modifier.shadow(elevation = 0.dp),
+            Icon(
+                modifier = Modifier.shadow(elevation = 0.dp),
                 imageVector = Icons.Outlined.ShoppingCart,
                 contentDescription = "bestsellers"
             )
@@ -113,7 +119,10 @@ private fun HeaderSection(modifier: Modifier, fruitImage: Int) {
 
 @Composable
 private fun FooterSection(fruit: Fruit?) {
+
     var isFavorite by remember { mutableStateOf(false) }
+    var itemQty by remember { mutableStateOf(-1) }
+
     if (fruit != null) {
         Card(shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)) {
             Column(
@@ -163,7 +172,9 @@ private fun FooterSection(fruit: Fruit?) {
                     style = MaterialTheme.typography.body2
                 )
 
-                IncrementDecrementSection(fruit)
+                IncrementDecrementSection(fruit) { currentQty ->
+                    itemQty = currentQty
+                }
 
                 Button(
                     modifier = Modifier
@@ -171,6 +182,7 @@ private fun FooterSection(fruit: Fruit?) {
                         .padding(top = 8.dp)
                         .clip(RoundedCornerShape(20.dp)),
                     onClick = { /*TODO*/ },
+                    enabled = itemQty != 0,
                     colors = ButtonDefaults.buttonColors(backgroundColor = GreenBackground)
                 ) {
                     Text(text = "Add to card", color = Color.White)
@@ -183,17 +195,37 @@ private fun FooterSection(fruit: Fruit?) {
 //TODO THE STATE OF THE INCREMENT DECREMENT SHOULD BE PROPAGATED TO THE TOP WITH LAMBDAS
 @Composable
 private fun IncrementDecrementSection(
-    fruit: Fruit?
+    fruit: Fruit?,
+    onQtyChanged: (Int) -> Unit
 ) {
     if (fruit != null) {
+
         var qty by remember { mutableStateOf(1) }
+        var scaleValue by remember { mutableStateOf(0f) }
         val totalPrice by remember { mutableStateOf(fruit.price) }
+
+        LaunchedEffect(qty) {
+            if (qty > 0) {
+                animate(
+                    .5f, 1f, animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioHighBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                ) { value, _ -> scaleValue = value }
+            }
+        }
+
         Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedButton(
                 modifier = Modifier
                     .width(35.dp)
                     .height(35.dp),
-                onClick = { if (qty != 0) qty-- },
+                onClick = {
+                    if (qty != 0) {
+                        qty--
+                        onQtyChanged.invoke(qty)
+                    }
+                },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White,
@@ -214,7 +246,8 @@ private fun IncrementDecrementSection(
             }
 
             Text(
-                modifier = Modifier.padding(end = 8.dp, start = 8.dp),
+                modifier = Modifier
+                    .padding(end = 8.dp, start = 8.dp),
                 text = "$qty",
                 color = GreenText,
                 style = MaterialTheme.typography.body1,
@@ -225,7 +258,10 @@ private fun IncrementDecrementSection(
                 modifier = Modifier
                     .width(35.dp)
                     .height(35.dp),
-                onClick = { qty++ },
+                onClick = {
+                    qty++
+                    onQtyChanged.invoke(qty)
+                },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White,
@@ -240,6 +276,10 @@ private fun IncrementDecrementSection(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
+                    modifier = Modifier.graphicsLayer {
+                    scaleX = scaleValue
+                    scaleY = scaleValue
+                },
                     text = "$${DecimalFormat("0.00").format(totalPrice * qty)} ", color = GreenText,
                     style = MaterialTheme.typography.h6,
                     fontWeight = FontWeight.Bold
@@ -268,3 +308,6 @@ fun PreviewFruitDetailScreen() {
         )
     ) {}
 }
+
+
+enum class BounceState { Pressed, Released }
