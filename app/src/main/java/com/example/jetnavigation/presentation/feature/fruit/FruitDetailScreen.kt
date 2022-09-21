@@ -139,22 +139,22 @@ private fun FooterSection(fruit: Fruit?) {
                         )
                         Text(
                             text = fruit.subtitle,
-                            style = MaterialTheme.typography.body1,
+                            style = MaterialTheme.typography.subtitle1,
                             color = GreenText
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
                     Button(
                         modifier = Modifier
-                            .width(35.dp)
-                            .height(35.dp),
+                            .width(40.dp)
+                            .height(40.dp),
                         onClick = { isFavorite = !isFavorite },
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(10.dp),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = GreenBackground,
                             contentColor = Color.White
                         ),
-                        contentPadding = PaddingValues(0.dp)
+                        contentPadding = PaddingValues(8.dp)
                     ) {
                         Icon(
                             imageVector = when (isFavorite) {
@@ -166,10 +166,10 @@ private fun FooterSection(fruit: Fruit?) {
                     }
                 }
                 Text(
-                    modifier = Modifier.padding(bottom = 16.dp, top = 16.dp),
+                    modifier = Modifier.padding(bottom = 24.dp, top = 16.dp, end = 35.dp),
                     text = fruit.description,
                     color = GreenText,
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body1
                 )
 
                 IncrementDecrementSection(fruit) { currentQty ->
@@ -179,7 +179,7 @@ private fun FooterSection(fruit: Fruit?) {
                 Button(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 8.dp)
+                        .height(60.dp)
                         .clip(RoundedCornerShape(20.dp)),
                     onClick = { /*TODO*/ },
                     enabled = itemQty != 0,
@@ -215,23 +215,23 @@ private fun IncrementDecrementSection(
             }
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(bottom = 32.dp), verticalAlignment = Alignment.CenterVertically) {
             OutlinedButton(
                 modifier = Modifier
-                    .width(35.dp)
-                    .height(35.dp),
+                    .width(40.dp)
+                    .height(40.dp),
                 onClick = {
                     if (qty != 0) {
                         qty--
                         onQtyChanged.invoke(qty)
                     }
                 },
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White,
                     contentColor = Color.DarkGray
                 ),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(8.dp)
             ) {
                 Icon(
                     imageVector = when (qty) {
@@ -247,27 +247,27 @@ private fun IncrementDecrementSection(
 
             Text(
                 modifier = Modifier
-                    .padding(end = 8.dp, start = 8.dp),
+                    .padding(end = 16.dp, start = 16.dp),
                 text = "$qty",
                 color = GreenText,
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.subtitle1,
                 fontWeight = FontWeight.Bold
             )
 
             OutlinedButton(
                 modifier = Modifier
-                    .width(35.dp)
-                    .height(35.dp),
+                    .width(40.dp)
+                    .height(40.dp),
                 onClick = {
                     qty++
                     onQtyChanged.invoke(qty)
                 },
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.White,
                     contentColor = Color.DarkGray
                 ),
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(8.dp)
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "add", tint = GreenText)
             }
