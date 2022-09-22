@@ -308,6 +308,3 @@ fun PreviewFruitDetailScreen() {
         )
     ) {}
 }
-
-
-enum class BounceState { Pressed, Released }
