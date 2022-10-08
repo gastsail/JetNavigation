@@ -1,7 +1,5 @@
 package com.example.jetnavigation.ui.screens
 
-import android.widget.Toast
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -13,88 +11,71 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetnavigation.R
-import com.example.jetnavigation.data.Fruit
+import com.example.jetnavigation.data.*
 import com.example.jetnavigation.data.LocalFruitRepository.Companion.fruitList
 import com.example.jetnavigation.presentation.FruitUiState
-import com.example.jetnavigation.presentation.FruitViewModel
 import com.example.jetnavigation.ui.theme.GreenBackground
 import com.example.jetnavigation.ui.theme.GreenText
 
 @Composable
 fun FruitListScreen(
-    viewModel: FruitViewModel = hiltViewModel(),
+    uiState: FruitUiState.FruitListScreenUiState,
     onNavigateToFruitDetail: (Fruit) -> Unit,
 ) {
-    val fruitUiState = viewModel.fruitUiState.observeAsState()
 
-    fruitUiState.value?.let { state ->
-        when (state) {
-            FruitUiState.Loading -> {
-                Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
-            }
-            is FruitUiState.FruitUiListSuccess -> {
-                FruitList(
-                    fruits = state.fruitList,
-                    onFruitClicked = onNavigateToFruitDetail
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+
+        uiState.welcomeUserSectionUiState?.let { welcomeUserSection ->
+            item {
+                WelcomeUserSection(
+                    welcomeUserSection.user?.title ?: "",
+                    welcomeUserSection.user?.name ?: ""
                 )
             }
-            is FruitUiState.Error -> {
-                Toast.makeText(
-                    LocalContext.current,
-                    "Error ${state.error}",
-                    Toast.LENGTH_SHORT
+        }
+
+        uiState.infoCardSectionUiState?.let { infoCardSection ->
+            item {
+                InfoCardSection(infoCardSection.infoCard?.title ?: "")
+            }
+        }
+
+        uiState.weeksBestSellerSectionUiState?.let { weekBestSellerSection ->
+            item {
+                WeeksBestSellerSection(weekBestSellerSection.weeksBestSeller?.title ?: "")
+            }
+        }
+
+        uiState.fruitListSectionUiState?.let {
+            items(it.fruitList ?: emptyList()) { fruit ->
+                FruitItem(
+                    fruit = fruit,
+                    onFruitClicked = { onNavigateToFruitDetail(fruit) }
                 )
-                    .show()
             }
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FruitList(fruits: List<Fruit>, onFruitClicked: (Fruit) -> Unit) {
-    LazyColumn(Modifier.background(Color.White)) {
-
-        stickyHeader {
-            HeaderSection()
-        }
-
-        items(fruits) { fruit ->
-            FruitItem(
-                fruit = fruit,
-                onFruitClicked = { onFruitClicked(fruit) }
-            )
-        }
-    }
-}
-
-@Composable
-fun HeaderSection() {
-    Column(Modifier.background(Color.White)) {
-        WelcomeUserSection()
-        InfoCardSection()
-        WeeksBestSellerSection()
-    }
-}
-
-@Composable
-fun InfoCardSection() {
+fun InfoCardSection(title: String) {
     Card(
         modifier = Modifier
             .padding(16.dp)
@@ -133,7 +114,7 @@ fun InfoCardSection() {
 
                 Text(
                     modifier = Modifier.padding(end = 32.dp),
-                    text = "We picked up a new portion of fresh fruits for you!",
+                    text = title,
                     fontFamily = FontFamily.Serif,
                     color = Color.White,
                     style = MaterialTheme.typography.body1,
@@ -166,7 +147,7 @@ fun InfoCardSection() {
 }
 
 @Composable
-fun WelcomeUserSection() {
+fun WelcomeUserSection(title: String, name: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -174,7 +155,7 @@ fun WelcomeUserSection() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            modifier = Modifier.weight(1f), text = "Hello, Elon!",
+            modifier = Modifier.weight(1f), text = "$title, $name!",
             style = MaterialTheme.typography.h5,
             color = GreenText,
             fontWeight = FontWeight.SemiBold,
@@ -192,7 +173,7 @@ fun WelcomeUserSection() {
 }
 
 @Composable
-fun WeeksBestSellerSection() {
+fun WeeksBestSellerSection(title: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -200,7 +181,7 @@ fun WeeksBestSellerSection() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Week's bestsellers",
+            text = title,
             style = MaterialTheme.typography.body1,
             modifier = Modifier
                 .fillMaxWidth()
@@ -285,6 +266,22 @@ private fun FruitItem(fruit: Fruit, onFruitClicked: (fruit: Fruit) -> Unit) {
     }
 }
 
+data class WelcomeUserSectionUiState(
+    val user: User?
+)
+
+data class InfoCardSectionUiState(
+    val infoCard: InfoCard?
+)
+
+data class WeeksBestSellerSectionUiState(
+    val weeksBestSeller: WeeksBestSeller?
+)
+
+data class FruitListSectionUiState(
+    val fruitList: List<Fruit>?
+)
+
 @Preview(showBackground = true)
 @Composable
 private fun FruitItemPreview() {
@@ -294,7 +291,11 @@ private fun FruitItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun HeaderPreview() {
-    HeaderSection()
+    Column {
+        WelcomeUserSection(title = "Hello,", name = "Elon")
+        InfoCardSection(title = "We picked up a new portion of fresh fruits for you!")
+        WeeksBestSellerSection(title = "Week's bestsellers")
+    }
 }
 
 @Preview(name = "background", showBackground = true)
@@ -304,5 +305,12 @@ private fun HeaderPreview() {
 @Preview(name = "tablet", device = "spec:shape=Normal,width=1280,height=800,unit=dp,dpi=480")
 @Composable
 private fun FruitListPreview() {
-    FruitList(fruitList) {}
+    LazyColumn {
+        items(fruitList) { fruit ->
+            FruitItem(
+                fruit = fruit,
+                onFruitClicked = {}
+            )
+        }
+    }
 }

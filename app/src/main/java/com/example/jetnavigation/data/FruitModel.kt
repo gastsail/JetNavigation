@@ -13,3 +13,10 @@ data class Fruit(
     val price: Float,
     @DrawableRes val image: Int,
 ) : Parcelable
+
+data class FruitScreenData(
+    val user: User,
+    val infoCard: InfoCard,
+    val weeksBestSeller: WeeksBestSeller,
+    val fruitList: List<Fruit>
+)
