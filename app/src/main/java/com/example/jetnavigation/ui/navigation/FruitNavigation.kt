@@ -1,15 +1,15 @@
-package com.example.jetnavigation.presentation.navigation
+package com.example.jetnavigation.ui.navigation
 
 import android.net.Uri
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.jetnavigation.data.Fruit
-import com.example.jetnavigation.presentation.feature.fruit.FruitDetailScreen
-import com.example.jetnavigation.presentation.feature.fruit.FruitListScreen
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitDetailNavigation
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitDetailNavigation.FRUIT_NAV_ARG
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitListNavigation
+import com.example.jetnavigation.ui.screens.FruitDetailScreen
+import com.example.jetnavigation.ui.screens.FruitListScreen
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitDetailNavigation
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitDetailNavigation.FRUIT_NAV_ARG
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitListNavigation
 import com.google.gson.Gson
 
 sealed class FruitNavigation(val route: String) {

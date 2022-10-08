@@ -1,9 +1,9 @@
-package com.example.jetnavigation.presentation.navigation
+package com.example.jetnavigation.ui.navigation
 
 import android.os.Bundle
 import androidx.navigation.NavType
 import com.example.jetnavigation.data.Fruit
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitDetailNavigation.FRUIT_NAV_ARG
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitDetailNavigation.FRUIT_NAV_ARG
 import com.google.gson.Gson
 
 val FruitNavType: NavType<Fruit> = object : NavType<Fruit>(isNullableAllowed = false){

@@ -1,10 +1,10 @@
-package com.example.jetnavigation.presentation.navigation
+package com.example.jetnavigation.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitDetailNavigation
-import com.example.jetnavigation.presentation.navigation.FruitNavigation.FruitListNavigation
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitDetailNavigation
+import com.example.jetnavigation.ui.navigation.FruitNavigation.FruitListNavigation
 
 @Composable
 fun AppNavHost(

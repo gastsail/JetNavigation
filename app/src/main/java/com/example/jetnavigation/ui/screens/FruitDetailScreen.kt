@@ -1,4 +1,4 @@
-package com.example.jetnavigation.presentation.feature.fruit
+package com.example.jetnavigation.ui.screens
 
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animate
@@ -30,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.jetnavigation.R
 import com.example.jetnavigation.data.Fruit
-import com.example.jetnavigation.presentation.theme.GreenBackground
-import com.example.jetnavigation.presentation.theme.GreenText
+import com.example.jetnavigation.ui.theme.GreenBackground
+import com.example.jetnavigation.ui.theme.GreenText
 import java.text.DecimalFormat
 
 @Composable

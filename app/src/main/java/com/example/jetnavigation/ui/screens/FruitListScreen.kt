@@ -1,4 +1,4 @@
-package com.example.jetnavigation.presentation.feature.fruit
+package com.example.jetnavigation.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -31,8 +31,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetnavigation.R
 import com.example.jetnavigation.data.Fruit
 import com.example.jetnavigation.data.LocalFruitRepository.Companion.fruitList
-import com.example.jetnavigation.presentation.theme.GreenBackground
-import com.example.jetnavigation.presentation.theme.GreenText
+import com.example.jetnavigation.presentation.FruitUiState
+import com.example.jetnavigation.presentation.FruitViewModel
+import com.example.jetnavigation.ui.theme.GreenBackground
+import com.example.jetnavigation.ui.theme.GreenText
 
 @Composable
 fun FruitListScreen(
@@ -100,8 +102,10 @@ fun InfoCardSection() {
         shape = RoundedCornerShape(30.dp),
         backgroundColor = GreenBackground
     ) {
-        Column(horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.Bottom) {
+        Column(
+            horizontalAlignment = Alignment.End,
+            verticalArrangement = Arrangement.Center
+        ) {
             Row(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -136,27 +140,26 @@ fun InfoCardSection() {
                     fontWeight = FontWeight.SemiBold
                 )
             }
-
             Button(
-                    modifier = Modifier
-                        .height(120.dp)
-                        .width(120.dp)
-                        .offset(x = 15.dp, y = (10).dp),
-                    onClick = { /*TODO*/ },
-                    shape = RoundedCornerShape(20.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.White.copy(alpha = 0.6f),
-                        contentColor = Color.White
-                    ),
-                    contentPadding = PaddingValues(bottom = 8.dp),
-                    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-                ) {
-                    Icon(
-                        modifier = Modifier.size(35.dp),
-                        imageVector = Icons.Outlined.ArrowForward,
-                        contentDescription = "bestsellers"
-                    )
-                }
+                modifier = Modifier
+                    .height(120.dp)
+                    .width(120.dp)
+                    .offset(x = 15.dp, y = (10).dp),
+                onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.White.copy(alpha = 0.6f),
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues(bottom = 8.dp),
+                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+            ) {
+                Icon(
+                    modifier = Modifier.size(35.dp),
+                    imageVector = Icons.Outlined.ArrowForward,
+                    contentDescription = "bestsellers"
+                )
+            }
 
         }
     }

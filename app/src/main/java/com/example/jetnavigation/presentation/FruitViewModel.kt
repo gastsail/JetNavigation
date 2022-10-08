@@ -1,4 +1,4 @@
-package com.example.jetnavigation.presentation.feature.fruit
+package com.example.jetnavigation.presentation
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
