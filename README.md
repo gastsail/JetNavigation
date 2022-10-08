@@ -16,20 +16,35 @@ For drawing UI we use [Unidirectional Data Flow](https://developer.android.com/j
 
 For emiting these states we use our [FruitViewModel](https://github.com/gastsail/JetNavigation/blob/master/app/src/main/java/com/example/jetnavigation/presentation/feature/fruit/FruitViewModel.kt) which emits the uiState
 
-The uiState is stored as a sealed interface 
+The uiState is stored as a sealed class 
 
 ```
-sealed interface FruitUiState {
-    object Loading : FruitUiState
-    data class FruitUiListSuccess(val fruitList: List<Fruit>) : FruitUiState
-    data class Error(val error: String?) : FruitUiState
+sealed class FruitUiState {
+    object Loading : FruitUiState()
+    data class FruitListScreenUiState(
+        val welcomeUserSectionUiState: WelcomeUserSectionUiState?,
+        val infoCardSectionUiState: InfoCardSectionUiState?,
+        val weeksBestSellerSectionUiState: WeeksBestSellerSectionUiState?,
+        val fruitListSectionUiState: FruitListSectionUiState?
+    ) : FruitUiState()
+
+    // TODO SAME AS ABOVE
+    // data class FruitDetailScreenUiState()
+
+    data class Error(val exception: Exception) : FruitUiState()
 }
 ```
 
 and emited with 
 
 ```
-val fruitUiState: LiveData<FruitUiState> = _fruitUiState
+ val uiState = fruitUiViewModelState
+        .map { it.toUiState() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Eagerly,
+            fruitUiViewModelState.value.toUiState()
+        )
 ```
 
 to the screen that renders the fruit list
