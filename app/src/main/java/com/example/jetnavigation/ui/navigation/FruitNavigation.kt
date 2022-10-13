@@ -55,7 +55,6 @@ fun NavGraphBuilder.fruitGraph(
         }
     }
 
-
     composable(route = FruitDetailNavigation.route + "/{$FRUIT_NAV_ARG}",
         arguments = listOf(navArgument(FRUIT_NAV_ARG) {
             type = FruitNavType

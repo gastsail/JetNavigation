@@ -61,6 +61,8 @@ class FruitViewModel @Inject constructor(private val fruitRepository: LocalFruit
         }
     }
 
+    //TODO CHALLENGE, AGREGAR ESTE METODO PARA CARGAR FruitDetailScreen NAVEGANDO DESDE FruitListScreen
+    // Pro-tip : https://youtu.be/0z_dwBGQQWQ?t=876
     fun findFruitById(fruitId: Long?) {
         viewModelScope.launch {
             fruitUiViewModelState.update { fruitUiViewModelState ->
