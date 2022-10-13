@@ -95,10 +95,6 @@ sealed class FruitUiState {
         val weeksBestSellerSectionUiState: WeeksBestSellerSectionUiState?,
         val fruitListSectionUiState: FruitListSectionUiState?
     ) : FruitUiState()
-
-    // TODO SAME AS ABOVE
-    // data class FruitDetailScreenUiState()
-
     data class Error(val exception: Exception) : FruitUiState()
 }
 
